@@ -1,35 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
+import { string } from 'prop-types';
 import profileIcon from '../images/profileIcon.svg';
 import searchIcon from '../images/searchIcon.svg';
+import SearchBar from './SearchBar';
 
 function Header({ title, search }) {
+  const [renderInput, setRenderInput] = useState(false);
+  const history = useHistory();
+
   return (
     <div>
-      { title }
-      <button
-        type="button"
+      <p data-testid="page-title">{ title }</p>
+      <input
+        type="image"
+        alt="profile icon"
         data-testid="profile-top-btn"
-      >
-        <img
-          src={ profileIcon }
-          alt="icone de perfil"
-        />
-      </button>
+        src={ profileIcon }
+        onClick={ () => history.push('/profile') }
+      />
 
       { search === null ? null : (
-        <button
-          type="button"
+        <input
+          type="image"
+          alt="search button"
           data-testid="search-top-btn"
-        >
-          <img
-            src={ searchIcon }
-            alt="icone de pesquisa"
-          />
-        </button>
+          src={ searchIcon }
+          onClick={ () => setRenderInput((prevState) => !prevState) }
+        />
       )}
+      { renderInput && (<SearchBar />)}
 
     </div>
   );
 }
+
+Header.propTypes = {
+  title: string.isRequired,
+  search: string.isRequired,
+};
 
 export default Header;

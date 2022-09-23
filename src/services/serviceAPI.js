@@ -1,10 +1,8 @@
-const END_POINT = 'www.themealdb.com/api/json/v1/1/search.php?s=Arrabiata';
+// const api = async (endpointID) => {
+//   const URL = `https://themealdb.com/api/json/v1/1/lookup.php?i=${endpointID}`;
+//   const response = await fetch(URL);
+//   const data = await response.json();
+//   return data.meals[0].idMeal;
+// };
 
-const getApiId = async () => {
-  const response = await fetch(END_POINT);
-  console.log(response);
-  const data = await response.json();
-  return data.meals;
-};
-
-export default getApiId;
+// export default api;
