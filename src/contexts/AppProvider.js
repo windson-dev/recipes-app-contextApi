@@ -8,7 +8,6 @@ function AppProvider({ children }) {
   const [meals, setMeals] = useState([]);
   const [drinks, setDrinks] = useState([]);
 
-  // eslint-disable-next-line react/jsx-no-constructed-context-values
   const contextApp = {
     email,
     password,
