@@ -5,6 +5,8 @@ import AppContext from './AppContext';
 function AppProvider({ children }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [meals, setMeals] = useState([]);
+  const [drinks, setDrinks] = useState([]);
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
   const contextApp = {
@@ -12,6 +14,10 @@ function AppProvider({ children }) {
     password,
     setEmail,
     setPassword,
+    meals,
+    setMeals,
+    drinks,
+    setDrinks,
   };
 
   return (

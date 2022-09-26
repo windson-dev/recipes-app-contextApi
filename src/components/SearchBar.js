@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
+import AppContext from '../contexts/AppContext';
 import fetchApi from '../services/serviceAPI';
 
 function SearchBar() {
   const history = useHistory();
   const { location: { pathname } } = history;
   const [state, setState] = useState({ input: '', search: '' });
+  const { setMeals, setDrinks } = useContext(AppContext);
 
   function handleChange({ target: { name, value } }) {
     setState((prevState) => ({ ...prevState, [name]: value }));
@@ -34,6 +36,12 @@ function SearchBar() {
       }
 
       history.push(`/drinks/${data.drinks[0].idDrink}`);
+    }
+
+    if (pathname === '/drinks') {
+      setDrinks(data[pathname.slice(1)]);
+    } else {
+      setMeals(data[pathname.slice(1)]);
     }
   }
 
