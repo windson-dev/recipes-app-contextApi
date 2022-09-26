@@ -20,6 +20,12 @@ function SearchBar() {
 
     const data = await fetchApi(state.input, state.search, pathname);
 
+    if (data[pathname.slice(1)] === null) {
+      global.alert('Sorry, we haven\'t found any recipes for these filters.');
+
+      return;
+    }
+
     if (data[pathname.slice(1)].length === 1) {
       if (pathname === '/meals') {
         history.push(`/meals/${data.meals[0].idMeal}`);
