@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import fetchApi from '../services/serviceAPI';
 
 function SearchBar() {
+  const history = useHistory();
+  const { location: { pathname } } = history;
   const [state, setState] = useState({ input: '', search: '' });
 
   function handleChange({ target: { name, value } }) {
@@ -15,9 +18,17 @@ function SearchBar() {
       return;
     }
 
-    const data = await fetchApi(state.input, state.search);
+    const data = await fetchApi(state.input, state.search, pathname);
 
-    console.log(data);
+    if (data[pathname.slice(1)].length === 1) {
+      if (pathname === '/meals') {
+        history.push(`/meals/${data.meals[0].idMeal}`);
+
+        return;
+      }
+
+      history.push(`/drinks/${data.drinks[0].idDrink}`);
+    }
   }
 
   return (
