@@ -6,28 +6,31 @@ import Recipes from './Recipes';
 const END = 5;
 
 function Drinks() {
-  const { setDrinks, setDrinksCategories } = useContext(AppContext);
+  const { drinksCategory, setDrinks, setDrinksCategories } = useContext(AppContext);
 
   useEffect(() => {
     async function fetchDrinks() {
-      const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+      const response = drinksCategory === 'All'
+        ? await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=')
+        : await fetch(`https://www.thecocktaildb.com/api/json/v1/1/filter.php?c=${drinksCategory}`);
       const { drinks } = await response.json();
 
       setDrinks(drinks);
     }
 
     fetchDrinks();
-  }, [setDrinks]);
+  }, [drinksCategory, setDrinks]);
 
   useEffect(() => {
-    async function fetchMealsCategories() {
+    async function fetchDrinksCategories() {
       const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
       const { drinks } = await response.json();
 
-      setDrinksCategories(drinks.slice(0, END).map((drink) => drink.strCategory));
+      setDrinksCategories((prevState) => [...prevState, ...drinks
+        .slice(0, END).map((drink) => drink.strCategory)]);
     }
 
-    fetchMealsCategories();
+    fetchDrinksCategories();
   }, [setDrinksCategories]);
 
   return (
