@@ -6,7 +6,9 @@ function AppProvider({ children }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [meals, setMeals] = useState([]);
+  const [mealsCategories, setMealsCategories] = useState([]);
   const [drinks, setDrinks] = useState([]);
+  const [drinksCategories, setDrinksCategories] = useState([]);
 
   const contextApp = {
     email,
@@ -15,8 +17,12 @@ function AppProvider({ children }) {
     setPassword,
     meals,
     setMeals,
+    mealsCategories,
+    setMealsCategories,
     drinks,
     setDrinks,
+    drinksCategories,
+    setDrinksCategories,
   };
 
   return (
