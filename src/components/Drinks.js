@@ -1,48 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
-// import AppContext from '../contexts/AppContext';
-import { fetchDrinks } from '../services/serviceAPI';
+import React, { useEffect, useContext } from 'react';
+import AppContext from '../contexts/AppContext';
 import Header from './Header';
-// import Recipes from './Recipes';
-
-const END = 12;
+import Recipes from './Recipes';
 
 function Drinks() {
-  const [drinksRecipes, setDrinksRecipes] = useState([]);
-  // const { drinks } = useContext(AppContext);
+  const { setDrinks } = useContext(AppContext);
 
   useEffect(() => {
-    const mounted = true;
-    fetchDrinks()
-      .then((items) => {
-        if (mounted) {
-          return setDrinksRecipes(items);
-        }
-      });
-  }, []);
+    async function fetchDrinks() {
+      const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/search.php?s=');
+      const { drinks } = await response.json();
+
+      setDrinks(drinks);
+    }
+
+    fetchDrinks();
+  }, [setDrinks]);
 
   return (
-    <div>
+    <>
       <Header title="Drinks" />
-      {drinksRecipes.drinks
-        ? drinksRecipes.drinks.slice(0, END).map(({ strDrink, strDrinkThumb }, index) => (
-          <Card
-            style={ { width: '18rem' } }
-            key={ strDrink }
-            data-testid={ `${index}-recipe-card` }
-          >
-            <Card.Img
-              src={ strDrinkThumb }
-              variant="top"
-              alt={ strDrink }
-              data-testid={ `${index}-card-img` }
-            />
-            <Card.Body>
-              <Card.Text data-testid={ `${index}-card-name` }>{strDrink}</Card.Text>
-            </Card.Body>
-          </Card>
-        )) : null}
-    </div>
+      <Recipes />
+    </>
   );
 }
 

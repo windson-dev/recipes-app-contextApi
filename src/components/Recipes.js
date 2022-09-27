@@ -1,54 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { Card } from 'react-bootstrap';
-import { fetchMeals, fetchMealsCategories } from '../services/serviceAPI';
+import React, { useContext } from 'react';
+import { useHistory } from 'react-router-dom';
+import CardItem from './CardItem';
+import AppContext from '../contexts/AppContext';
+
+const FINAL_INDEX = 12;
 
 function Recipes() {
-  const [mealsRecipes, setMealsRecipes] = useState([]);
-  const [allCategory, setAllCategory] = useState({});
-  const END = 12;
+  const { location: { pathname } } = useHistory();
+  const { drinks, meals } = useContext(AppContext);
 
-  useEffect(() => {
-    const mounted = true;
-    fetchMeals()
-      .then((items) => {
-        if (mounted) {
-          return setMealsRecipes(items);
-        }
-      });
-  }, []);
-
-  useEffect(() => {
-    const mounted = true;
-    fetchMealsCategories()
-      .then((items) => {
-        if (mounted) {
-          return setAllCategory(items);
-        }
-      });
-  }, []);
-
-  return (
-    <div>
-      { mealsRecipes.meals
-        ? mealsRecipes.meals.slice(0, END).map(({ strMeal, strMealThumb }, index) => (
-          <Card
-            style={ { width: '18rem' } }
-            key={ strMeal }
-            data-testid={ `${index}-recipe-card` }
-          >
-            <Card.Img
-              src={ strMealThumb }
-              variant="top"
-              alt={ strMeal }
-              data-testid={ `${index}-card-img` }
-            />
-            <Card.Body>
-              <Card.Text data-testid={ `${index}-card-name` }>{strMeal}</Card.Text>
-            </Card.Body>
-          </Card>
-        )) : null }
-    </div>
-  );
+  return pathname === '/drinks'
+    ? drinks.slice(0, FINAL_INDEX).map(({ strDrink, strDrinkThumb }, index) => (
+      <CardItem
+        index={ index }
+        key={ strDrink }
+        str={ strDrink }
+        strThumb={ strDrinkThumb }
+      />
+    ))
+    : meals.slice(0, FINAL_INDEX).map(({ strMeal, strMealThumb }, index) => (
+      <CardItem
+        index={ index }
+        key={ strMeal }
+        str={ strMeal }
+        strThumb={ strMealThumb }
+      />
+    ));
 }
 
 export default Recipes;
