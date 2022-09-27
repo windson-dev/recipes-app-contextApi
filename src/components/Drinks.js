@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import AppContext from '../contexts/AppContext';
 import Header from './Header';
+import Footer from './Footer';
 import Recipes from './Recipes';
 
 const END = 5;
@@ -37,6 +38,7 @@ function Drinks() {
     <>
       <Header title="Drinks" />
       <Recipes />
+      <Footer />
     </>
   );
 }
