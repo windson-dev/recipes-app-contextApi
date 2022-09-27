@@ -1,8 +1,24 @@
-// const api = async (endpointID) => {
-//   const URL = `https://themealdb.com/api/json/v1/1/lookup.php?i=${endpointID}`;
-//   const response = await fetch(URL);
-//   const data = await response.json();
-//   return data.meals[0].idMeal;
-// };
+export default async function fetchApi(input, search, pathname) {
+  let url;
 
-// export default api;
+  if (pathname === '/meals') {
+    url = search === 'i'
+      ? `https://www.themealdb.com/api/json/v1/1/filter.php?i=${input}`
+      : `https://www.themealdb.com/api/json/v1/1/search.php?${search}=${input}`;
+  } else {
+    url = search === 'i'
+      ? `https://www.thecocktaildb.com/api/json/v1/1/filter.php?i=${input}`
+      : `https://www.thecocktaildb.com/api/json/v1/1/search.php?${search}=${input}`;
+  }
+
+  const response = await fetch(url);
+  const data = await response.json();
+
+  return data;
+}
+
+export async function fetchMealsCategories() {
+  const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
+  const data = await response.json();
+  return data;
+}
