@@ -27,7 +27,7 @@ function CardItem({ id, index, pathname, str, strThumb }) {
 }
 
 CardItem.propTypes = {
-  id: propTypes.number.isRequired,
+  id: propTypes.string.isRequired,
   index: propTypes.number.isRequired,
   pathname: propTypes.string.isRequired,
   str: propTypes.string.isRequired,
