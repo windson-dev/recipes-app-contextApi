@@ -10,7 +10,7 @@ function Meals() {
 
   return (
     <div>
-      <Header title="Drinks" />
+      <Header title="Meals" />
       {meals.slice(0, END).map(({ strMeal, strMealThumb }, index) => (
         <Card
           style={ { width: '18rem' } }
