@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Card } from 'react-bootstrap';
 import AppContext from '../contexts/AppContext';
 import Header from './Header';
+import Recipes from './Recipes';
 
 const END = 12;
 
@@ -28,6 +29,7 @@ function Meals() {
           </Card.Body>
         </Card>
       ))}
+      <Recipes />
     </div>
   );
 }
