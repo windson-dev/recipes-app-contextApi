@@ -10,22 +10,30 @@ function Recipes() {
   const { drinks, meals } = useContext(AppContext);
 
   return pathname === '/drinks'
-    ? drinks.slice(0, FINAL_INDEX).map(({ strDrink, strDrinkThumb }, index) => (
-      <CardItem
-        index={ index }
-        key={ strDrink }
-        str={ strDrink }
-        strThumb={ strDrinkThumb }
-      />
-    ))
-    : meals.slice(0, FINAL_INDEX).map(({ strMeal, strMealThumb }, index) => (
-      <CardItem
-        index={ index }
-        key={ strMeal }
-        str={ strMeal }
-        strThumb={ strMealThumb }
-      />
-    ));
+    ? drinks
+      .slice(0, FINAL_INDEX)
+      .map(({ idDrink, strDrink, strDrinkThumb }, index) => (
+        <CardItem
+          id={ idDrink }
+          index={ index }
+          key={ strDrink }
+          pathname={ pathname }
+          str={ strDrink }
+          strThumb={ strDrinkThumb }
+        />
+      ))
+    : meals
+      .slice(0, FINAL_INDEX)
+      .map(({ idMeal, strMeal, strMealThumb }, index) => (
+        <CardItem
+          id={ idMeal }
+          index={ index }
+          key={ strMeal }
+          pathname={ pathname }
+          str={ strMeal }
+          strThumb={ strMealThumb }
+        />
+      ));
 }
 
 export default Recipes;
