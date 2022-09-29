@@ -7,8 +7,6 @@ import Drinks from './components/Drinks';
 import Profile from './components/Profile';
 import DoneRecipes from './components/DoneRecipes';
 import FavoriteRecipes from './components/FavoriteRecipes';
-// import Meal from './components/Meal';
-// import Drink from './components/Drink';
 import RecipeDetails from './components/RecipeDetails';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
