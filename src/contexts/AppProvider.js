@@ -12,6 +12,8 @@ function AppProvider({ children }) {
   const [drinksCategory, setDrinksCategory] = useState('All');
   const [drinksCategories, setDrinksCategories] = useState(['All']);
   const [recipeDetails, setRecipeDetails] = useState({});
+  const [recommendedDrinks, setRecommendedDrinks] = useState();
+  const [recommendedMeals, setRecommendedMeals] = useState();
 
   const contextApp = {
     email,
@@ -32,6 +34,10 @@ function AppProvider({ children }) {
     setDrinksCategories,
     recipeDetails,
     setRecipeDetails,
+    recommendedDrinks,
+    setRecommendedDrinks,
+    recommendedMeals,
+    setRecommendedMeals,
   };
 
   return (

@@ -10,7 +10,7 @@ function Header({ title, search }) {
   const history = useHistory();
 
   return (
-    <div>
+    <header>
       <p data-testid="page-title">{ title }</p>
       <input
         type="image"
@@ -31,7 +31,7 @@ function Header({ title, search }) {
       )}
       { renderInput && (<SearchBar />)}
 
-    </div>
+    </header>
   );
 }
 

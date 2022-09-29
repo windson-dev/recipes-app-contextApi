@@ -1,10 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import AppContext from '../contexts/AppContext';
 import CardDetails from './CardDetails';
+import './RecommendedCarousel.css';
 
 function DrinksDetails() {
+  const { recommendedMeals, setRecommendedMeals } = useContext(AppContext);
   const [recipeDetails, setRecipeDetails] = useState({});
-  const [isFetching, setIsFetching] = useState(false);
   const { location: { pathname } } = useHistory();
   const { id } = useParams();
 
@@ -14,12 +16,21 @@ function DrinksDetails() {
         const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
         response.json().then((data) => {
           setRecipeDetails(data.drinks[0]);
-          setIsFetching(true);
         });
       }
     }
     fetchDrinks();
   }, [id, pathname]);
+
+  useEffect(() => {
+    async function fetchRecommendedMeals() {
+      const response = await fetch('https://www.themealdb.com/api/json/v1/1/search.php?s=');
+      response.json().then((data) => {
+        setRecommendedMeals(data.meals);
+      });
+    }
+    fetchRecommendedMeals();
+  }, [setRecommendedMeals]);
 
   const getAllStrIngredients = Object.keys(recipeDetails)
     .filter((element) => element.includes('strIngredient'))
@@ -49,9 +60,11 @@ function DrinksDetails() {
 
   const { strDrinkThumb, strDrink,
     strInstructions, strYoutube, strAlcoholic } = recipeDetails;
+  console.log(recommendedMeals);
 
+  const maxRecommended = 6;
   return (
-    !isFetching ? <p>Loading...</p> : (
+    <div>
       <CardDetails
         image={ strDrinkThumb }
         title={ strDrink }
@@ -61,7 +74,31 @@ function DrinksDetails() {
         instructions={ strInstructions }
         category={ strAlcoholic }
       />
-    )
+      <div className="container-fluid">
+        <div className="row flex-row flex-nowrap overflow-auto">
+          {recommendedMeals
+              && (recommendedMeals.slice(0, maxRecommended)
+                .map(({ strMealThumb, strMeal, idMeal }, index) => (
+                  <div
+                    key={ idMeal }
+                    style={ { width: '11rem' } }
+                    data-testid={ `${index}-recommendation-card` }
+                  >
+                    <p
+                      data-testid={ `${index}-recommendation-title` }
+                    >
+                      { strMeal }
+                    </p>
+                    <img
+                      className="card-img-top"
+                      src={ strMealThumb }
+                      alt={ strMeal }
+                    />
+                  </div>
+                )))}
+        </div>
+      </div>
+    </div>
   );
 }
 
