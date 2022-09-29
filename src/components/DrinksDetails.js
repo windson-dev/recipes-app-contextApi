@@ -74,6 +74,7 @@ function DrinksDetails() {
         instructions={ strInstructions }
         category={ strAlcoholic }
       />
+
       <div className="container-fluid">
         <div className="row flex-row flex-nowrap overflow-auto">
           {recommendedMeals
@@ -98,6 +99,13 @@ function DrinksDetails() {
                 )))}
         </div>
       </div>
+      <button
+        type="button"
+        data-testid="start-recipe-btn"
+        className="start-recipe"
+      >
+        Start Recipe
+      </button>
     </div>
   );
 }
