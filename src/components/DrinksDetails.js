@@ -7,7 +7,8 @@ import './RecommendedCarousel.css';
 function DrinksDetails() {
   const { recommendedMeals, setRecommendedMeals } = useContext(AppContext);
   const [recipeDetails, setRecipeDetails] = useState({});
-  const { location: { pathname } } = useHistory();
+  const history = useHistory();
+  const { location: { pathname } } = history;
   const { id } = useParams();
 
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) ?? [];
@@ -111,6 +112,7 @@ function DrinksDetails() {
           type="button"
           data-testid="start-recipe-btn"
           className="start-recipe"
+          onClick={ () => history.push(`/drinks/${id}/in-progress`) }
         >
           {isInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>

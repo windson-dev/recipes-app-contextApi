@@ -8,7 +8,8 @@ function MealsDetails() {
   const { recommendedDrinks, setRecommendedDrinks } = useContext(AppContext);
   const [recipeDetails, setRecipeDetails] = useState({});
 
-  const { location: { pathname } } = useHistory();
+  const history = useHistory();
+  const { location: { pathname } } = history;
   const { id } = useParams();
 
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) ?? [];
@@ -112,6 +113,7 @@ function MealsDetails() {
           type="button"
           data-testid="start-recipe-btn"
           className="start-recipe"
+          onClick={ () => history.push(`/meals/${id}/in-progress`) }
         >
           {isInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>
