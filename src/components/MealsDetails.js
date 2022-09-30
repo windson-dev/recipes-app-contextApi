@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import copy from 'clipboard-copy';
+import shareIcon from '../images/shareIcon.svg';
 import AppContext from '../contexts/AppContext';
 import CardDetails from './CardDetails';
 import './RecommendedCarousel.css';
@@ -7,6 +9,7 @@ import './RecommendedCarousel.css';
 function MealsDetails() {
   const { recommendedDrinks, setRecommendedDrinks } = useContext(AppContext);
   const [recipeDetails, setRecipeDetails] = useState({});
+  const [wasClicked, setWasClicked] = useState(false);
 
   const history = useHistory();
   const { location: { pathname } } = history;
@@ -18,6 +21,11 @@ function MealsDetails() {
   const inProgressRecipes = JSON.parse(localStorage
     .getItem('inProgressRecipes')) ?? { drinks: {}, meals: {} };
   const isInProgress = Object.hasOwn(inProgressRecipes.meals, id);
+
+  function handleShareClick() {
+    copy(window.location.href);
+    setWasClicked(true);
+  }
 
   useEffect(() => {
     async function fetchMeals() {
@@ -108,6 +116,18 @@ function MealsDetails() {
                 )))}
         </div>
       </div>
+      <input
+        alt="shareIcon"
+        data-testid="share-btn"
+        onClick={ handleShareClick }
+        src={ shareIcon }
+        type="image"
+      />
+      <input
+        alt="favoriteIcon"
+        data-testid="favorite-btn"
+        type="image"
+      />
       {!isDone && (
         <button
           type="button"
@@ -118,8 +138,7 @@ function MealsDetails() {
           {isInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>
       )}
-      <button data-testid="share-btn" type="button">Compartilhar</button>
-      <button data-testid="favorite-btn" type="button">Favoritar</button>
+      {wasClicked && <span>Link copied!</span>}
     </div>
   );
 }

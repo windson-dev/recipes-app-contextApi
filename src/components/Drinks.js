@@ -27,7 +27,7 @@ function Drinks() {
       const response = await fetch('https://www.thecocktaildb.com/api/json/v1/1/list.php?c=list');
       const { drinks } = await response.json();
 
-      setDrinksCategories((prevState) => [...prevState, ...drinks
+      setDrinksCategories(['All', ...drinks
         .slice(0, END).map((drink) => drink.strCategory)]);
     }
 
