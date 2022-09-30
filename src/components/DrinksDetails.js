@@ -13,6 +13,10 @@ function DrinksDetails() {
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) ?? [];
   const isDone = doneRecipes.some((doneRecipe) => doneRecipe.id === id);
 
+  const inProgressRecipes = JSON.parse(localStorage
+    .getItem('inProgressRecipes')) ?? { drinks: {}, meals: {} };
+  const isInProgress = Object.hasOwn(inProgressRecipes.drinks, id);
+
   useEffect(() => {
     async function fetchDrinks() {
       if (pathname === `/drinks/${id}`) {
@@ -108,7 +112,7 @@ function DrinksDetails() {
           data-testid="start-recipe-btn"
           className="start-recipe"
         >
-          Start Recipe
+          {isInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>
       )}
     </div>
