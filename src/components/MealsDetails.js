@@ -118,6 +118,8 @@ function MealsDetails() {
           {isInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>
       )}
+      <button data-testid="share-btn" type="button">Compartilhar</button>
+      <button data-testid="favorite-btn" type="button">Favoritar</button>
     </div>
   );
 }
