@@ -8,11 +8,16 @@ function MealsDetails() {
   const { recommendedDrinks, setRecommendedDrinks } = useContext(AppContext);
   const [recipeDetails, setRecipeDetails] = useState({});
 
-  const { location: { pathname } } = useHistory();
+  const history = useHistory();
+  const { location: { pathname } } = history;
   const { id } = useParams();
 
   const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) ?? [];
   const isDone = doneRecipes.some((doneRecipe) => doneRecipe.id === id);
+
+  const inProgressRecipes = JSON.parse(localStorage
+    .getItem('inProgressRecipes')) ?? { drinks: {}, meals: {} };
+  const isInProgress = Object.hasOwn(inProgressRecipes.meals, id);
 
   useEffect(() => {
     async function fetchMeals() {
@@ -108,10 +113,13 @@ function MealsDetails() {
           type="button"
           data-testid="start-recipe-btn"
           className="start-recipe"
+          onClick={ () => history.push(`/meals/${id}/in-progress`) }
         >
-          Start Recipe
+          {isInProgress ? 'Continue Recipe' : 'Start Recipe'}
         </button>
       )}
+      <button data-testid="share-btn" type="button">Compartilhar</button>
+      <button data-testid="favorite-btn" type="button">Favoritar</button>
     </div>
   );
 }
