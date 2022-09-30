@@ -10,6 +10,9 @@ function DrinksDetails() {
   const { location: { pathname } } = useHistory();
   const { id } = useParams();
 
+  const doneRecipes = JSON.parse(localStorage.getItem('doneRecipes')) ?? [];
+  const isDone = doneRecipes.some((doneRecipe) => doneRecipe.id === id);
+
   useEffect(() => {
     async function fetchDrinks() {
       if (pathname === `/drinks/${id}`) {
@@ -99,13 +102,15 @@ function DrinksDetails() {
                 )))}
         </div>
       </div>
-      <button
-        type="button"
-        data-testid="start-recipe-btn"
-        className="start-recipe"
-      >
-        Start Recipe
-      </button>
+      {!isDone && (
+        <button
+          type="button"
+          data-testid="start-recipe-btn"
+          className="start-recipe"
+        >
+          Start Recipe
+        </button>
+      )}
     </div>
   );
 }
