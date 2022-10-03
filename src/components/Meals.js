@@ -27,7 +27,7 @@ function Meals() {
       const response = await fetch('https://www.themealdb.com/api/json/v1/1/list.php?c=list');
       const { meals } = await response.json();
 
-      setMealsCategories((prevState) => [...prevState, ...meals
+      setMealsCategories(['All', ...meals
         .slice(0, END).map((meal) => meal.strCategory)]);
     }
 
@@ -36,7 +36,7 @@ function Meals() {
 
   return (
     <>
-      <Header title="Meals" />
+      <Header search title="Meals" />
       <Recipes />
       <Footer />
     </>
