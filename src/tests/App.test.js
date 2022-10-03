@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
+import { render, screen, cleanup, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './rwr/renderWithRouter';
 import Meals from '../../cypress/mocks/meals';
@@ -21,15 +21,8 @@ const IGREDIENTS_SEARCH_RADIO = 'ingredient-search-radio';
 const NAME_SEARCH_RADIO = 'name-search-radio';
 const FIRST_LETTER_SEARCH_RADIO = 'first-letter-search-radio';
 const EXEC_SEARCH_BTN = 'exec-search-btn';
-const ALL_CATEGORY_FILTER = 'All-category-filter';
 const MEALS_BOTTOM_BTN = 'meals-bottom-btn';
 const DRINKS_BOTTOM_BTN = 'drinks-bottom-btn';
-
-// beforeEach(() => {
-//   global.fetch = jest.fn(() => Promise.resolve({
-//     json: () => Promise.resolve(categoryMOCK),
-//   }));
-// });
 
 const renderTestId = (testid) => {
   const getTestId = screen.getByTestId(testid);
@@ -130,7 +123,7 @@ describe('2 - Testa a página Meals', () => {
     expect(screen.getByRole('button', { name: /goat/i })).toBeInTheDocument();
   });
 
-  test('Testa se uma pesquisa é executada com sucesso', async () => {
+  test.only('Testa se uma pesquisa é executada com sucesso', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValueOnce({
       json: jest.fn().mockResolvedValue(Meals),
@@ -139,7 +132,9 @@ describe('2 - Testa a página Meals', () => {
     }).mockResolvedValueOnce({
       json: jest.fn().mockResolvedValue(drinks),
     });
-    renderWithRouter(<App />, '/meals');
+    const { history } = renderWithRouter(<App />);
+    history.push('/meals');
+    // await waitFor(() => null, { timeout: 3000 });
 
     // const email = screen.getByTestId(EMAIL_IMPUT);
     // expect(email).toBeInTheDocument();
@@ -147,7 +142,7 @@ describe('2 - Testa a página Meals', () => {
     // userEvent.type(screen.getByTestId(PASSWORD_INPUT), VALID_PASSWORD);
     // userEvent.click(screen.getByTestId(LOGIN_SUBMIT_BTN));
 
-    userEvent.click(screen.getByTestId(SEARCH_TOP_BTN));
+    userEvent.click(await screen.findByTestId(SEARCH_TOP_BTN));
     userEvent.type(screen.getByTestId(SEARCH_IMPUT), 'Salt');
     userEvent.click(screen.getByTestId(IGREDIENTS_SEARCH_RADIO));
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
