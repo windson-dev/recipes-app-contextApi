@@ -1,9 +1,11 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import renderWithRouter from './rwr/renderWithRouter';
-import categoryMOCK from './MOCK/categoryMOCK.json';
+import Meals from '../../cypress/mocks/meals';
 import App from '../App';
+import mealCategories from '../../cypress/mocks/mealCategories';
+import drinks from '../../cypress/mocks/drinks';
 
 const VALID_EMAIL = 'test@test.com';
 const VALID_PASSWORD = '1234567';
@@ -23,11 +25,11 @@ const ALL_CATEGORY_FILTER = 'All-category-filter';
 const MEALS_BOTTOM_BTN = 'meals-bottom-btn';
 const DRINKS_BOTTOM_BTN = 'drinks-bottom-btn';
 
-beforeEach(() => {
-  global.fetch = jest.fn(() => Promise.resolve({
-    json: () => Promise.resolve(categoryMOCK),
-  }));
-});
+// beforeEach(() => {
+//   global.fetch = jest.fn(() => Promise.resolve({
+//     json: () => Promise.resolve(categoryMOCK),
+//   }));
+// });
 
 const renderTestId = (testid) => {
   const getTestId = screen.getByTestId(testid);
@@ -35,6 +37,8 @@ const renderTestId = (testid) => {
 };
 
 describe('1 - Testes a página de Login', () => {
+  afterEach(() => cleanup());
+
   test('Testa se a página de Login é renderizada na rota "/"', () => {
     const { history } = renderWithRouter(<App />);
 
@@ -78,89 +82,76 @@ describe('1 - Testes a página de Login', () => {
 
 describe('2 - Testa a página Meals', () => {
   test('Testa se a aplicação faz uma requisição a API', () => {
-    const { history } = renderWithRouter(<App />);
-    history.push('/meals');
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(Meals),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mealCategories),
+    });
+    renderWithRouter(<App />, '/meals');
 
     const endpoint = 'https://www.themealdb.com/api/json/v1/1/search.php?s=';
     expect(global.fetch).toHaveBeenCalledWith(endpoint);
+    const endpoint2 = 'https://www.themealdb.com/api/json/v1/1/list.php?c=list';
+    expect(global.fetch).toHaveBeenCalledWith(endpoint2);
   });
 
-  test('Testa se os elementos com data-testid são renderizados na tela de Meals', async () => {
-    const { history } = renderWithRouter(<App />);
-    history.push('/meals');
+  test('Testa a renderização dos itens com test id', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(Meals),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mealCategories),
+    });
+    renderWithRouter(<App />, '/meals');
+    const profileTopBTN = screen.getByTestId(PROFILE_TOP_BTN);
+    expect(profileTopBTN).toBeInTheDocument();
+    const searchTopBTN = screen.getByTestId(SEARCH_TOP_BTN);
+    expect(searchTopBTN).toBeInTheDocument();
+    const mealsBottomBTN = screen.getByTestId(MEALS_BOTTOM_BTN);
+    expect(mealsBottomBTN).toBeInTheDocument();
+    const drinksBottomBTN = screen.getByTestId(DRINKS_BOTTOM_BTN);
+    expect(drinksBottomBTN).toBeInTheDocument();
 
-    const searchButton = screen.getByTestId(SEARCH_TOP_BTN);
-    expect(searchButton).toBeInTheDocument();
+    expect(await screen.findAllByTestId(/recipe-card/)).toHaveLength(12);
 
-    const mealsTestIds = [
-      PROFILE_TOP_BTN,
-      ALL_CATEGORY_FILTER,
-      // 'Beef-category-filter',
-      // 'Breakfast-category-filter',
-      // 'Chicken-category-filter',
-      // 'Dessert-category-filter',
-      // 'Goat-category-filter',
-      MEALS_BOTTOM_BTN,
-      DRINKS_BOTTOM_BTN,
-    ];
+    userEvent.click(screen.getByTestId(SEARCH_TOP_BTN));
 
-    await waitFor(
-      () => mealsTestIds.map((e) => renderTestId(e)),
-      { timeout: 3000 },
-    );
+    expect(screen.getByTestId(SEARCH_IMPUT)).toBeInTheDocument();
+    expect(screen.getByTestId(IGREDIENTS_SEARCH_RADIO)).toBeInTheDocument();
+    expect(screen.getByTestId(NAME_SEARCH_RADIO)).toBeInTheDocument();
+    expect(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO)).toBeInTheDocument();
+    expect(screen.getByTestId(EXEC_SEARCH_BTN)).toBeInTheDocument();
 
-    const searchButtonIds = [
-      SEARCH_IMPUT,
-      IGREDIENTS_SEARCH_RADIO,
-      NAME_SEARCH_RADIO,
-      FIRST_LETTER_SEARCH_RADIO,
-      EXEC_SEARCH_BTN,
-    ];
-
-    userEvent.click(searchButton);
-
-    searchButtonIds.map((e) => renderTestId(e));
-
-    userEvent.click(searchButton);
+    expect(screen.getByRole('button', { name: /all/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /beef/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /breakfast/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /chicken/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /goat/i })).toBeInTheDocument();
   });
 
-  test('Testa se ao pesquisar pelo igrediente Sal, receitas que contém sal é renderizadas na tela', () => {
-    const { history } = renderWithRouter(<App />);
-    history.push('/meals');
+  test('Testa se uma pesquisa é executada com sucesso', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(Meals),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mealCategories),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(drinks),
+    });
+    renderWithRouter(<App />, '/meals');
+
+    // const email = screen.getByTestId(EMAIL_IMPUT);
+    // expect(email).toBeInTheDocument();
+    // userEvent.type(screen.getByTestId(EMAIL_IMPUT), VALID_EMAIL);
+    // userEvent.type(screen.getByTestId(PASSWORD_INPUT), VALID_PASSWORD);
+    // userEvent.click(screen.getByTestId(LOGIN_SUBMIT_BTN));
 
     userEvent.click(screen.getByTestId(SEARCH_TOP_BTN));
     userEvent.type(screen.getByTestId(SEARCH_IMPUT), 'Salt');
     userEvent.click(screen.getByTestId(IGREDIENTS_SEARCH_RADIO));
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
-    expect(global.fetch).toHaveBeenCalled();
-  });
-
-  test('Testa se ao clicar no profile-icon, o usuário é redirecionado', () => {
-    const { history } = renderWithRouter(<App />);
-    history.push('/meals');
-
-    const profileIcon = screen.getByTestId(PROFILE_TOP_BTN);
-    userEvent.click(profileIcon);
-
-    const profileTitle = screen.getByTestId('page-title');
-    expect(profileTitle).toBeInTheDocument();
-  });
-
-  test('Testa se ao clicar no botão meals a página é redirecionada para /meals', () => {
-    const { history } = renderWithRouter(<App />);
-    history.push('/meals');
-
-    userEvent.click(screen.getByTestId(MEALS_BOTTOM_BTN));
-
-    expect(history.location.pathname).toBe('/meals');
-  });
-
-  test('Testa se ao clicar no botão drinks a página é redirecionada para /drinks', async () => {
-    const { history } = renderWithRouter(<App />);
-    history.push('/meals');
-
-    const drinkBtn = screen.getByTestId(DRINKS_BOTTOM_BTN);
-    expect(drinkBtn).toBeInTheDocument();
+    expect(await screen.findByTestId('0-recipe-card')).toBeInTheDocument();
   });
 });
