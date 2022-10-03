@@ -7,10 +7,10 @@ function AppProvider({ children }) {
   const [password, setPassword] = useState('');
   const [meals, setMeals] = useState([]);
   const [mealsCategory, setMealsCategory] = useState('All');
-  const [mealsCategories, setMealsCategories] = useState(['All']);
+  const [mealsCategories, setMealsCategories] = useState([]);
   const [drinks, setDrinks] = useState([]);
   const [drinksCategory, setDrinksCategory] = useState('All');
-  const [drinksCategories, setDrinksCategories] = useState(['All']);
+  const [drinksCategories, setDrinksCategories] = useState([]);
   const [recipeDetails, setRecipeDetails] = useState({});
   const [recommendedDrinks, setRecommendedDrinks] = useState();
   const [recommendedMeals, setRecommendedMeals] = useState();
