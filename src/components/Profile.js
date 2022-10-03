@@ -5,8 +5,7 @@ import Header from './Header';
 function Profile() {
   return (
     <div>
-      <Header search={ null } title="Profile" />
-      PERFIL:
+      <Header title="Profile" />
       <Footer />
     </div>
   );
