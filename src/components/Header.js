@@ -20,7 +20,7 @@ function Header({ title, search }) {
         onClick={ () => history.push('/profile') }
       />
 
-      { search === null ? null : (
+      { search && (
         <input
           type="image"
           alt="search button"
@@ -29,15 +29,19 @@ function Header({ title, search }) {
           onClick={ () => setRenderInput((prevState) => !prevState) }
         />
       )}
-      { renderInput && (<SearchBar />)}
+      { renderInput && <SearchBar />}
 
     </header>
   );
 }
 
+Header.defaultProps = {
+  search: undefined,
+};
+
 Header.propTypes = {
   title: string.isRequired,
-  search: string.isRequired,
+  search: string,
 };
 
 export default Header;

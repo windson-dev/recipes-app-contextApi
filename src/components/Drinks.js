@@ -36,7 +36,7 @@ function Drinks() {
 
   return (
     <>
-      <Header title="Drinks" />
+      <Header search title="Drinks" />
       <Recipes />
       <Footer />
     </>
