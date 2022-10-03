@@ -20,7 +20,7 @@ function Header({ title, search }) {
         onClick={ () => history.push('/profile') }
       />
 
-      { search === null ? null : (
+      { search && (
         <input
           type="image"
           alt="search button"

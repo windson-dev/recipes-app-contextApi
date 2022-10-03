@@ -4,7 +4,7 @@ import Header from './Header';
 function FavoriteRecipes() {
   return (
     <div>
-      <Header search={ null } title="Favorite Recipes" />
+      <Header title="Favorite Recipes" />
     </div>
   );
 }
