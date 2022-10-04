@@ -1,19 +1,15 @@
 import React, { useContext, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-
 import AppContext from '../contexts/AppContext';
 
 function DrinkInProgress() {
   const { recipies, setRecipies } = useContext(AppContext);
   const { id } = useParams();
-  // console.log(id);
-  // console.log(recipies);
 
   useEffect(() => {
     const fetchDrink = async () => {
       const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
       const data = await response.json();
-      console.log(data);
       setRecipies(data.drinks[0]);
     };
     fetchDrink();
@@ -56,15 +52,6 @@ function DrinkInProgress() {
       >
         { recipies.strInstructions }
       </p>
-
-      {/* <label
-        htmlFor="checkbox"
-        // key={  }
-        // data-testid={ `${index}-ingredient-step` }
-      >
-        {  }
-        <input type="checkbox" id="checkbox" />
-      </label> */}
 
       <button
         type="button"
