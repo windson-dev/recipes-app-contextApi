@@ -18,7 +18,7 @@ const PASSWORD_INPUT = 'password-input';
 const LOGIN_SUBMIT_BTN = 'login-submit-btn';
 const PROFILE_TOP_BTN = 'profile-top-btn';
 const SEARCH_TOP_BTN = 'search-top-btn';
-const SEARCH_IMPUT = 'search-input';
+const SEARCH_INPUT = 'search-input';
 const IGREDIENTS_SEARCH_RADIO = 'ingredient-search-radio';
 const NAME_SEARCH_RADIO = 'name-search-radio';
 const FIRST_LETTER_SEARCH_RADIO = 'first-letter-search-radio';
@@ -117,7 +117,7 @@ describe('2 - Testa a página Meals', () => {
 
     userEvent.click(screen.getByTestId(SEARCH_TOP_BTN));
 
-    expect(screen.getByTestId(SEARCH_IMPUT)).toBeInTheDocument();
+    expect(screen.getByTestId(SEARCH_INPUT)).toBeInTheDocument();
     expect(screen.getByTestId(IGREDIENTS_SEARCH_RADIO)).toBeInTheDocument();
     expect(screen.getByTestId(NAME_SEARCH_RADIO)).toBeInTheDocument();
     expect(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO)).toBeInTheDocument();
@@ -129,7 +129,9 @@ describe('2 - Testa a página Meals', () => {
     expect(screen.getByRole('button', { name: /chicken/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /goat/i })).toBeInTheDocument();
   });
+});
 
+describe('4 - Testando SearchBar', () => {
   test('Testa se uma pesquisa é executada com sucesso', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValueOnce({
@@ -143,15 +145,37 @@ describe('2 - Testa a página Meals', () => {
     history.push('/meals');
 
     userEvent.click(await screen.findByTestId(SEARCH_TOP_BTN));
-    userEvent.type(screen.getByTestId(SEARCH_IMPUT), 'Salt');
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Salt');
     userEvent.click(screen.getByTestId(IGREDIENTS_SEARCH_RADIO));
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
     expect(await screen.findByTestId('0-recipe-card')).toBeInTheDocument();
   });
+
+  test('Testa se, na Barra de Pesquisa, selecionado a opção "primeira letra", e no input estar mais de um caractere, retorna um global.alert', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(Meals),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mealCategories),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(chickenMeals),
+    });
+    jest.spyOn(global, 'alert');
+
+    const { history } = renderWithRouter(<App />);
+    history.push('/meals');
+
+    userEvent.click(await screen.findByTestId(SEARCH_TOP_BTN));
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Salt');
+    userEvent.click(screen.getByTestId(FIRST_LETTER_SEARCH_RADIO));
+    userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
+
+    expect(global.alert).toBeCalled();
+  });
 });
 
-describe('3 - Testando o Footer', () => {
+describe('3 - Testando o Footer e Header', () => {
   test('Testa se, ao clicar no ícone de taça, é redirecionado para "/drinks"', async () => {
     jest.spyOn(global, 'fetch');
     global.fetch.mockResolvedValueOnce({
@@ -210,5 +234,22 @@ describe('3 - Testando o Footer', () => {
     const drinksButton2 = screen.getByTestId(DRINKS_BOTTOM_BTN);
     expect(drinksButton2).toBeInTheDocument();
     expect(history.location.pathname).toBe('/meals');
+  });
+
+  test('Testa se, no Header, ao clicar no ícone de "profile", é redirecionado para "/profile"', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(Meals),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mealCategories),
+    });
+
+    const { history } = renderWithRouter(<App />);
+    history.push('/meals');
+
+    const profileButton = await screen.findByTestId(PROFILE_TOP_BTN);
+    expect(profileButton).toBeInTheDocument();
+    userEvent.click(profileButton);
+    expect(history.location.pathname).toBe('/profile');
   });
 });
