@@ -1,13 +1,13 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import mockedParse from './MOCK/mockedParse';
+import { mockedDoneRecipes } from './MOCK/mockedParse';
 import DoneRecipes from '../components/DoneRecipes';
 
 describe('testa o componente DoneRecipes possuíndo duas receitas finalizadas', () => {
   beforeEach(() => jest
     .spyOn(Storage.prototype, 'getItem')
-    .mockReturnValue(JSON.stringify(mockedParse)));
+    .mockReturnValue(JSON.stringify(mockedDoneRecipes)));
 
   it('testa se renderiza as duas receitas', () => {
     render(<DoneRecipes />);
