@@ -8,6 +8,8 @@ import mealCategories from '../../cypress/mocks/mealCategories';
 import chickenMeals from '../../cypress/mocks/chickenMeals';
 import drinks from '../../cypress/mocks/drinks';
 import drinkCategories from '../../cypress/mocks/drinkCategories';
+import mockedCarbonara from './MOCK/mockedCarbonara';
+import mockedCubaLibre from './MOCK/mockedCubaLibre';
 
 const VALID_EMAIL = 'test@test.com';
 const VALID_PASSWORD = '1234567';
@@ -145,11 +147,51 @@ describe('4 - Testando SearchBar', () => {
     history.push('/meals');
 
     userEvent.click(await screen.findByTestId(SEARCH_TOP_BTN));
-    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'Salt');
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'chicken');
     userEvent.click(screen.getByTestId(IGREDIENTS_SEARCH_RADIO));
     userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
 
-    expect(await screen.findByTestId('0-recipe-card')).toBeInTheDocument();
+    expect(await screen.findByText('Brown Stew Chicken')).toBeInTheDocument();
+  });
+
+  test('testa se a aplicação é redirecionada caso apenas uma comida seja encontrada', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(Meals),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mealCategories),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mockedCarbonara),
+    });
+    const { history } = renderWithRouter(<App />);
+    history.push('/meals');
+
+    userEvent.click(screen.getByTestId(SEARCH_TOP_BTN));
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'carbonara');
+    userEvent.click(screen.getByTestId(NAME_SEARCH_RADIO));
+    userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
+
+    expect(await screen.findByText('Spaghetti alla Carbonara')).toBeDefined();
+  });
+
+  test('testa se a aplicação é redirecionada caso apenas uma bebida seja encontrada', async () => {
+    jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(Meals),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mealCategories),
+    }).mockResolvedValueOnce({
+      json: jest.fn().mockResolvedValue(mockedCubaLibre),
+    });
+    const { history } = renderWithRouter(<App />);
+    history.push('/drinks');
+
+    userEvent.click(screen.getByTestId(SEARCH_TOP_BTN));
+    userEvent.type(screen.getByTestId(SEARCH_INPUT), 'cuba libre');
+    userEvent.click(screen.getByTestId(NAME_SEARCH_RADIO));
+    userEvent.click(screen.getByTestId(EXEC_SEARCH_BTN));
+
+    expect(await screen.findByText('Cuba Libre')).toBeDefined();
   });
 
   test('Testa se, na Barra de Pesquisa, selecionado a opção "primeira letra", e no input estar mais de um caractere, retorna um global.alert', async () => {

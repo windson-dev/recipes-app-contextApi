@@ -72,12 +72,10 @@ function MealsDetails() {
 
   useEffect(() => {
     async function fetchMeals() {
-      if (pathname === `/meals/${id}`) {
-        const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
-        response.json().then((data) => {
-          setRecipeDetails(data.meals[0]);
-        });
-      }
+      const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${id}`);
+      response.json().then((data) => {
+        setRecipeDetails(data.meals[0]);
+      });
     }
     fetchMeals();
   }, [id, pathname]);

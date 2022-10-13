@@ -1,4 +1,4 @@
-import { string } from 'prop-types';
+import { arrayOf, string } from 'prop-types';
 import React from 'react';
 
 function CardDetails({ image, title, video,
@@ -37,7 +37,7 @@ CardDetails.propTypes = {
   title: string,
   video: string,
   instructions: string,
-  measure: string,
+  measure: arrayOf,
   ingredient: string,
   category: string,
 };

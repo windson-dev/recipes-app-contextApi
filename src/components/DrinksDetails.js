@@ -71,12 +71,10 @@ function DrinksDetails() {
 
   useEffect(() => {
     async function fetchDrinks() {
-      if (pathname === `/drinks/${id}`) {
-        const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
-        response.json().then((data) => {
-          setRecipeDetails(data.drinks[0]);
-        });
-      }
+      const response = await fetch(`https://www.thecocktaildb.com/api/json/v1/1/lookup.php?i=${id}`);
+      response.json().then((data) => {
+        setRecipeDetails(data.drinks[0]);
+      });
     }
     fetchDrinks();
   }, [id, pathname]);

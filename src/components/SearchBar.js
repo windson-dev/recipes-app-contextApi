@@ -58,6 +58,7 @@ function SearchBar() {
       <label htmlFor="ingredient">
         ingredients:
         <input
+          id="ingredient"
           name="search"
           value="i"
           onChange={ handleChange }
@@ -68,6 +69,7 @@ function SearchBar() {
       <label htmlFor="nameSearch">
         nameSearch:
         <input
+          id="nameSearch"
           name="search"
           value="s"
           onChange={ handleChange }
@@ -78,6 +80,7 @@ function SearchBar() {
       <label htmlFor="firstLatter">
         firstLatter:
         <input
+          id="firstLatter"
           name="search"
           value="f"
           onChange={ handleChange }
