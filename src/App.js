@@ -3,9 +3,8 @@ import { Route, Switch } from 'react-router-dom';
 import AppProvider from './contexts/AppProvider';
 import Login from './components/Login';
 import Meals from './components/Meals';
-import MealInProgress from './components/MealInProgress';
+import RecipeInProgress from './components/RecipeInProgress';
 import Drinks from './components/Drinks';
-import DrinkInProgress from './components/DrinkInProgress';
 import Profile from './components/Profile';
 import DoneRecipes from './components/DoneRecipes';
 import FavoriteRecipes from './components/FavoriteRecipes';
@@ -17,8 +16,8 @@ function App() {
   return (
     <AppProvider>
       <Switch>
-        <Route path="/drinks/:id/in-progress" component={ DrinkInProgress } />
-        <Route path="/meals/:id/in-progress" component={ MealInProgress } />
+        <Route path="/drinks/:id/in-progress" component={ RecipeInProgress } />
+        <Route path="/meals/:id/in-progress" component={ RecipeInProgress } />
         <Route path="/done-recipes" component={ DoneRecipes } />
         <Route path="/favorite-recipes" component={ FavoriteRecipes } />
         <Route path="/drinks/:id" component={ RecipeDetails } />
